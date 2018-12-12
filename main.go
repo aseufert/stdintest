@@ -7,6 +7,7 @@ import (
 )
 
 func execCommand(p string, a ...string) {
+	fmt.Println("Running...")
 	cmd := exec.Command(p, a...) // #nosec
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
