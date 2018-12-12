@@ -18,5 +18,5 @@ func execCommand(p string, a ...string) {
 }
 
 func main() {
-	execCommand("ls", "-alt")
+	execCommand("idevicesyslog")
 }
