@@ -1,23 +1,33 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"os"
 	"os/exec"
+	"strings"
 )
 
-func execCommand(p string, a ...string) {
-	fmt.Println("Running...")
-	cmd := exec.Command(p, a...) // #nosec
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err := cmd.Run()
-	if err != nil {
-		fmt.Printf("%v\n", err)
+func execCommand(p string) {
+	cmdArgs := strings.Fields(p)
+
+	cmd := exec.Command(cmdArgs[0], cmdArgs[1:len(cmdArgs)]...) //#nosec
+	stdout, err := cmd.StdoutPipe()                             //#nosec
+	cmd.Start()                                                 //#nosec
+	//oneByte := make([]byte, 1000)
+	for {
+		//_, err := stdout.Read(oneByte)
+		if err != nil {
+			fmt.Printf(err.Error())
+			break
+		}
+		r := bufio.NewReader(stdout)
+		line, _, _ := r.ReadLine() //#nosec
+		fmt.Printf("Line: %v\n", string(line))
 	}
+
+	cmd.Wait() //#nosec
 }
 
 func main() {
-	execCommand("idevicesyslog")
+	execCommand("ls")
 }
